@@ -9,28 +9,28 @@
 import UIKit
 enum MBProgressHUDMode: NSInteger{
     // UIActivityIndicatorView.
-    case MBProgressHUDModeIndeterminate
+    case Indeterminate
     // A round, pie-chart like, progress view.  (饼状)
-    case MBProgressHUDModeDeterminate
+    case Determinate
     // Horizontal progress bar.     （水平）
-    case MBProgressHUDModeDeterminateHorizontalBar
+    case DeterminateHorizontalBar
     // Ring-shaped progress view   （环状）
-    case MBProgressHUDModeAnnularDeterminate
+    case AnnularDeterminate
     // Shows a custom view.
-    case MBProgressHUDModeCustomView
+    case CustomView
     // Shows only labels.    (只有文字)
-    case MBProgressHUDModeText
+    case Text
 }
 enum MBProgressHUDAnimation: NSInteger
 {
     // Opacity animation
-    case MBProgressHUDAnimationFade
+    case Fade
     // Opacity + scale animation (zoom in when appearing zoom out when disappearing)
-    case MBProgressHUDAnimationZoom
+    case Zoom
     // Opacity + scale animation (zoom out style)
-    case MBProgressHUDAnimationZoomOut
+    case ZoomOut
     // Opacity + scale animation (zoom in style)
-    case MBProgressHUDAnimationZoomIn
+    case ZoomIn
 }
 enum MBProgressHUDBackgroundStyle: NSInteger
 {
@@ -166,25 +166,81 @@ class MBProgressHUD: UIView {
     //
     var bottomSpacer:UIView?
    
-    class func showHUDAddedTo(view : UIView ,animated : Bool) ->MBProgressHUD{
-        var hud  = MBProgressHUD().initWithView(view)
-        return hud
-    }
+//    class func showHUDAddedTo(view : UIView ,animated : Bool) ->MBProgressHUD{
+//        var hud  = MBProgressHUD().initWithView(view)
+//        return hud
+//    }
     
     // Lifecycle
+    func commonInit(){
+        // Set default values for properties
+        animationType = MBProgressHUDAnimation.Fade
+        mode = MBProgressHUDMode.Indeterminate
+        margin = 20.0
+        opacity = 1.0
+        defaultMotionEffectsEnabled = true
+        // Default color, depending on the current iOS version
+        let isLegacy : Bool = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_7_0
+        contentColor = isLegacy ? UIColor.whiteColor() : UIColor.init(white: 0, alpha: 0.7)
+        // Transparent background
+        opaque = false
+        backgroundColor = UIColor.clearColor()
+        autoresizingMask = UIViewAutoresizing(rawValue:(UIViewAutoresizing.FlexibleWidth.rawValue | UIViewAutoresizing.FlexibleHeight.rawValue))
+        layer.allowsEdgeAntialiasing = false
+        
+    }
+    
     func initWithView(view : UIView){
         
     }
     
-    func init(frame: CGRect) {
-        <#code#>
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+        fatalError("init(coder:) has not been implemented")
+    }
+    // UI
+    func  setupViews(){
+        let defaultColor = contentColor
+        
+        
     }
 }
 
 class MBRoundProgressView: UIView {
-   
+    
     
     
     
     
 }
+
+class MBBackgroundView: UIView {
+    /**
+     * The background style.
+     * Defaults to MBProgressHUDBackgroundStyleBlur on iOS 7 or later and MBProgressHUDBackgroundStyleSolidColor otherwise.
+     * @note Due to iOS 7 not supporting UIVisualEffectView the blur effect differs slightly between iOS 7 and later versions.
+     */
+    var style:MBProgressHUDBackgroundStyle?
+    /**
+     * The background color or the blur tint color.
+     * @note Due to iOS 7 not supporting UIVisualEffectView the blur effect differs slightly between iOS 7 and later versions.
+     */
+    var color:UIColor?
+    //
+    var effectView:UIVisualEffectView?
+    //
+    var toolbar:UIToolbar?
+    
+    //lifecycle
+//    override init(frame: CGRect) {
+//        
+//    }
+}
+
+
